@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Learning to Perceive the World Through Control</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --link: #2563eb;
+      --link-hover: #1d4ed8;
+      --surface: #f9fafb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+      font-size: 1.0625rem;
+      line-height: 1.55;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    .page {
+      max-width: 58rem;
+      margin: 0 auto;
+      padding: 2.25rem clamp(1.25rem, 4vw, 2.5rem) 4rem;
+    }
+
+    .venue-line {
+      margin: 0 0 0.6rem;
+    }
+
+    .venue {
+      display: inline-block;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #b45309;
+      background: #fef3c7;
+      border-radius: 0.3em;
+      padding: 0.2em 0.6em;
+      letter-spacing: 0.04em;
+    }
+
+    h1 {
+      font-size: clamp(1.5rem, 2.2vw + 0.8rem, 2.1rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+      margin: 0 0 1.25rem;
+      text-wrap: balance;
+    }
+
+    .authors {
+      margin: 0 0 0.5rem;
+      color: var(--muted);
+    }
+
+    .author-names {
+      margin: 0.2rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.15rem 0;
+      font-size: 1.25rem;
+      font-weight: 500;
+    }
+
+    .author-emails {
+      margin: 0.35rem 0 0.2rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.15rem 0;
+      font-size: 0.95rem;
+    }
+
+    .authors a {
+      color: var(--text);
+      text-decoration: underline;
+      text-decoration-color: var(--border);
+      text-underline-offset: 3px;
+    }
+
+    .authors a:hover {
+      color: var(--link);
+      text-decoration-color: var(--link);
+    }
+
+    .authors .sep {
+      color: var(--muted);
+      margin: 0 0.4rem;
+      text-decoration: none;
+    }
+
+    .corr {
+      font-weight: 600;
+      color: var(--text);
+      margin-left: 0.1rem;
+    }
+
+    .corr-note {
+      margin: 0.35rem 0 0.75rem;
+      font-size: 0.875rem;
+      color: var(--muted);
+    }
+
+    .affil {
+      margin: 0 0 1.5rem;
+    }
+
+    .affil img {
+      height: 2.75rem;
+      width: auto;
+      display: block;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 0.65rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .actions a {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.5rem 0.95rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      background: #ffffff;
+    }
+
+    .actions a:hover {
+      border-color: #cbd5e1;
+      background: var(--surface);
+    }
+
+    .actions a.primary {
+      background: var(--text);
+      color: #fff;
+      border-color: var(--text);
+    }
+
+    .actions a.primary:hover {
+      background: #374151;
+      border-color: #374151;
+    }
+
+    section {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    section h2 {
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #374151;
+      margin: 0 0 1.1rem;
+    }
+
+    .result-row {
+      display: grid;
+      grid-template-columns: 2fr 3fr;
+      gap: 2rem;
+      align-items: center;
+      margin-bottom: 3rem;
+    }
+
+    .result-row.flip {
+      grid-template-columns: 3fr 2fr;
+    }
+
+    .result-row.flip .result-figure {
+      order: 2;
+    }
+
+    .result-row.flip .result-notes {
+      order: 1;
+    }
+
+    @media (max-width: 640px) {
+      .result-row,
+      .result-row.flip {
+        grid-template-columns: 1fr;
+      }
+      .result-row.flip .result-figure,
+      .result-row.flip .result-notes {
+        order: unset;
+      }
+    }
+
+    .result-figure img {
+      height: auto;
+      border: 1px solid var(--border);
+      border-radius: 0.4rem;
+      display: block;
+    }
+
+    #fig1 img { width: 320px; }
+    #fig2 img { width: 820px; max-width: 100%; }
+    #fig-geom img { width: 480px; max-width: 100%; }
+
+    .result-centered {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 3rem;
+    }
+
+    .result-notes-below {
+      display: inline-block;
+      width: auto;
+      max-width: 820px;
+      margin-top: 1rem;
+      text-align: left;
+    }
+
+    .result-caption {
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .result-notes {
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: 0.4rem;
+      padding: 1rem 1.1rem;
+      min-height: unset;
+      font-size: 1.05rem;
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .result-notes.result-notes-below {
+      min-height: unset;
+    }
+
+    .abstract ul {
+      margin: 0;
+      padding-left: 1.2rem;
+      max-width: 52rem;
+    }
+
+    .abstract li {
+      margin-bottom: 0.5rem;
+    }
+
+    .video-wrap {
+      margin-top: 0.5rem;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #000;
+      line-height: 0;
+    }
+
+    .video-wrap video {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      min-height: 12rem;
+      background: #000;
+    }
+
+    .video-fallback {
+      margin: 0.5rem 0 0;
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .video-fallback a {
+      color: var(--link);
+    }
+
+    .bibtex {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 0.4rem;
+      padding: 1.1rem 1.25rem;
+      font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+      font-size: 0.875rem;
+      line-height: 1.7;
+      color: var(--text);
+      overflow-x: auto;
+      white-space: pre;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <p class="venue-line"><span class="venue">ICML 2026</span></p>
+      <h1>Learning to Perceive the World Through Control: Empowerment-Based Representation Learning</h1>
+      <div class="authors">
+        <p class="author-names">
+          <a href="https://sites.google.com/view/mahsabastankhah/home">Mahsa Bastankhah</a><span class="corr">*</span><span class="sep">,</span>
+          <a href="https://sophiebroderick.com/">Sophie Broderick</a><span class="sep">,</span>
+          <a href="https://www.cs.princeton.edu/~eysenbach">Benjamin Eysenbach</a>
+        </p>
+        <p class="author-emails">
+          <a href="mailto:mb6458@princeton.edu">mb6458@princeton.edu</a><span class="sep">·</span>
+          <a href="mailto:sophiebroderick@princeton.edu">sophiebroderick@princeton.edu</a><span class="sep">·</span>
+          <a href="mailto:eysenbach@princeton.edu">eysenbach@princeton.edu</a>
+        </p>
+      </div>
+      <p class="corr-note"><span class="corr">*</span> Corresponding author</p>
+      <p class="affil">
+        <img src="princeton-logo.png" alt="Princeton University" width="220" height="44" />
+      </p>
+
+      <nav class="actions" aria-label="Paper links">
+        <a class="primary" href="paper.pdf">PDF</a>
+        <a href="#bibtex">BibTeX</a>
+        <a href="https://openreview.net/">OpenReview</a>
+      </nav>
+    </header>
+
+    <section class="abstract">
+      <h2>Abstract</h2>
+      <ul>
+        <li>Learning representations that only capture the control-relevant information is crucial in high-dimensional environments.</li>
+        <li>Current methods either learn representations from an expert dataset (hard to collect) or use task-specific reward functions (not generalizeable).</li>
+        <li>In this work, we theoretically show <em>Empowerment</em>, an objective historically used for diverse policy training in online settings is a principled way to learn representations that capture only the control-relevant information.</li>
+        <li>Intuitively an empowerment agent only cares about controlling the environment therefore the representations it learns are only focused on control.</li>
+        <li>We show that empowerment agents learn two set of representations, forward and backward. The forward representation captures what states are reachable from a state and the backward captures how a state is reached. Both of these representations are invariant to noise.</li>
+        <li>We verify our theoretical claims by empirical results in high dimensional and pixel-based environments.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Presentation</h2>
+      <div class="video-wrap">
+        <video controls playsinline preload="metadata" src="presentation-web.mp4">
+          <a href="presentation-web.mp4">Download presentation video</a>
+        </video>
+      </div>
+    </section>
+
+    <section>
+      <h2>Empirical Results</h2>
+
+      <!-- Plot 1: image left, notes right -->
+      <div class="result-row">
+        <div class="result-figure" id="fig1">
+          <img src="invariance_noise_grouped_envs.png" alt="Invariance to noise across environments" />
+        </div>
+        <div class="result-notes">
+          Empowerment representations don't change by changing the noise component of the state (invariance) but they significantly vary by changing the control-relevant features.
+        </div>
+      </div>
+
+      <!-- Plot 2: centered image, text below -->
+      <div class="result-centered">
+        <div class="result-figure" id="fig2">
+          <img src="kitchen_ant_maze_encoder_row.png" alt="Encoder representations on Kitchen and Ant Maze" />
+        </div>
+        <div class="result-notes result-notes-below">
+          Using empowerment representations for training policies in noisy environments significantly improves the performance.
+        </div>
+      </div>
+
+      <div class="video-wrap" style="margin-top:2rem; max-width:620px; margin-left:auto; margin-right:auto;">
+        <video controls playsinline preload="metadata" src="kitchen_seed2_noenc_ep200_vs_enc_ep100_0to5p5s.mp4"></video>
+      </div>
+    </section>
+
+    <section>
+      <h2>Geometric Intuition</h2>
+      <div class="result-centered">
+        <div class="result-figure" id="fig-geom">
+          <img src="geom.png" alt="Geometric intuition of empowerment representations" />
+        </div>
+        <div class="result-notes result-notes-below">
+          In the simplex of future-state distributions over (s0, s1, s2, s3), each action is represented by a point. If we change the control-relevant part of the initial state, x0, the simplex changes completely (Top). This means that two initial states with different control-relevant components induce fundamentally different future-state distributions.
+In contrast, if we only change the control-irrelevant part of the initial state (e0), the resulting future-state distributions are simply a rotated and shifted version of the each other (Bottom). Since the geometry remains the same, empowerment picks the same actions in the rotated and shifted simplex, actions that maximize the divergence between the the average future state distribution and each individual action future state distribution.
+        </div>
+      </div>
+    </section>
+
+    <section id="bibtex">
+      <h2>BibTeX</h2>
+      <pre class="bibtex"><code>@article{bastankhah2026empowerment,
+  title     = {Learning to Perceive the World Through Control:
+               Empowerment-Based Representation Learning},
+  author    = {Bastankhah, Mahsa and Broderick, Sophie and Eysenbach, Benjamin},
+  year      = {2026},
+}</code></pre>
+    </section>
+  </div>
+</body>
+</html>
