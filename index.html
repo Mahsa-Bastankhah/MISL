@@ -162,6 +162,45 @@
       border-color: #374151;
     }
 
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.5rem 0.95rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      font-family: inherit;
+      color: var(--text);
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      cursor: pointer;
+    }
+
+    .action-btn:hover {
+      border-color: #cbd5e1;
+      background: var(--surface);
+    }
+
+    .code-note {
+      margin-top: 0.85rem;
+      padding: 0.85rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      font-size: 0.95rem;
+      color: var(--text);
+      line-height: 1.55;
+      max-width: 36rem;
+    }
+
+    .code-note a {
+      color: var(--link);
+    }
+
+    .hidden {
+      display: none;
+    }
+
     section {
       margin-top: 2rem;
       padding-top: 2rem;
@@ -256,14 +295,14 @@
       min-height: unset;
     }
 
-    .abstract ul {
-      margin: 0;
-      padding-left: 1.2rem;
+    .abstract p {
+      margin: 0 0 1rem;
       max-width: 52rem;
+      line-height: 1.65;
     }
 
-    .abstract li {
-      margin-bottom: 0.5rem;
+    .abstract p:last-child {
+      margin-bottom: 0;
     }
 
     .video-wrap {
@@ -336,77 +375,47 @@
         <a class="primary" href="paper.pdf">PDF</a>
         <a href="#bibtex">BibTeX</a>
         <a href="https://openreview.net/">OpenReview</a>
+        <button class="action-btn" onclick="document.getElementById('code-note').classList.toggle('hidden')">Code</button>
       </nav>
+      <div id="code-note" class="code-note hidden">
+        The empowerment representations are trained using the codebase of
+        <a href="https://seohong.me/projects/metra/" target="_blank" rel="noopener">METRA</a>.
+        For more information about the details, contact
+        <a href="mailto:mb6458@princeton.edu">mb6458@princeton.edu</a>.
+      </div>
     </header>
 
     <section class="abstract">
-      <h2>Abstract</h2>
-      <ul>
-        <li>Learning representations that only capture the control-relevant information is crucial in high-dimensional environments.</li>
-        <li>Current methods either learn representations from an expert dataset (hard to collect) or use task-specific reward functions (not generalizeable).</li>
-        <li>In this work, we theoretically show <em>Empowerment</em>, an objective historically used for diverse policy training in online settings is a principled way to learn representations that capture only the control-relevant information.</li>
-        <li>Intuitively an empowerment agent only cares about controlling the environment therefore the representations it learns are only focused on control.</li>
-        <li>We show that empowerment agents learn two set of representations, forward and backward. The forward representation captures what states are reachable from a state and the backward captures how a state is reached. Both of these representations are invariant to noise.</li>
-        <li>We verify our theoretical claims by empirical results in high dimensional and pixel-based environments.</li>
-      </ul>
+      <h2>Lay Summary</h2>
+      <p>
+        Most real-world reinforcement learning problems involve very high-dimensional observations that contain many irrelevant details and distractors. For example, a robot navigating a room should focus on walls, doors, and obstacles—not the color of the floor or changing lighting conditions. In reinforcement learning, however, the agent must collect its own data through directed exploration, which becomes especially challenging when observations are noisy and cluttered, since it is difficult to tell which aspects of the environment are meaningful and under the agent's control versus which are simply noise.
+      </p>
+      <p>
+        In this work, we show that <em>Empowerment</em>—an objective that measures how much influence an agent has over its environment—provides a principled way to learn concise representations that capture only the aspects of the environment that matter for control while ignoring irrelevant distractors. In this work, we show that Empowerment—an objective that measures how much influence an agent has over its environment—provides a principled way to learn concise representations that capture only the aspects of the environment that matter for control while ignoring irrelevant distractors. We show this property both theoretically and emperically. This makes empowerment a great candidate for unsupervised RL representation learning because it prescribe how to collect data and how to learn representations at the same time.
+      </p>
+      <p>
+        Finally, we demonstrate that these representations improve performance on downstream tasks, particularly in environments with noisy or distracting observations.
+      </p>
     </section>
 
     <section>
       <h2>Presentation</h2>
-      <div class="video-wrap">
-        <video controls playsinline preload="metadata" src="presentation-web.mp4">
-          <a href="presentation-web.mp4">Download presentation video</a>
+      <div class="video-wrap" style="margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw); border-radius: 0;">
+        <video controls playsinline autoplay muted preload="auto" src="empowerment-reps-websit-presentation.mp4">
+          <a href="empowerment-reps-websit-presentation.mp4">Download presentation video</a>
         </video>
-      </div>
-    </section>
-
-    <section>
-      <h2>Empirical Results</h2>
-
-      <!-- Plot 1: image left, notes right -->
-      <div class="result-row">
-        <div class="result-figure" id="fig1">
-          <img src="invariance_noise_grouped_envs.png" alt="Invariance to noise across environments" />
-        </div>
-        <div class="result-notes">
-          Empowerment representations don't change by changing the noise component of the state (invariance) but they significantly vary by changing the control-relevant features.
-        </div>
-      </div>
-
-      <!-- Plot 2: centered image, text below -->
-      <div class="result-centered">
-        <div class="result-figure" id="fig2">
-          <img src="kitchen_ant_maze_encoder_row.png" alt="Encoder representations on Kitchen and Ant Maze" />
-        </div>
-        <div class="result-notes result-notes-below">
-          Using empowerment representations for training policies in noisy environments significantly improves the performance.
-        </div>
-      </div>
-
-      <div class="video-wrap" style="margin-top:2rem; max-width:620px; margin-left:auto; margin-right:auto;">
-        <video controls playsinline preload="metadata" src="kitchen_seed2_noenc_ep200_vs_enc_ep100_0to5p5s.mp4"></video>
-      </div>
-    </section>
-
-    <section>
-      <h2>Geometric Intuition</h2>
-      <div class="result-centered">
-        <div class="result-figure" id="fig-geom">
-          <img src="geom.png" alt="Geometric intuition of empowerment representations" />
-        </div>
-        <div class="result-notes result-notes-below">
-          In the simplex of future-state distributions over (s0, s1, s2, s3), each action is represented by a point. If we change the control-relevant part of the initial state, x0, the simplex changes completely (Top). This means that two initial states with different control-relevant components induce fundamentally different future-state distributions.
-In contrast, if we only change the control-irrelevant part of the initial state (e0), the resulting future-state distributions are simply a rotated and shifted version of the each other (Bottom). Since the geometry remains the same, empowerment picks the same actions in the rotated and shifted simplex, actions that maximize the divergence between the the average future state distribution and each individual action future state distribution.
-        </div>
       </div>
     </section>
 
     <section id="bibtex">
       <h2>BibTeX</h2>
-      <pre class="bibtex"><code>@article{bastankhah2026empowerment,
+      <pre class="bibtex"><code>@inproceedings{bastankhah2026empowerment,
   title     = {Learning to Perceive the World Through Control:
                Empowerment-Based Representation Learning},
   author    = {Bastankhah, Mahsa and Broderick, Sophie and Eysenbach, Benjamin},
+  booktitle = {Proceedings of the 43rd International Conference on Machine Learning},
+  series    = {Proceedings of Machine Learning Research},
+  publisher = {PMLR},
   year      = {2026},
 }</code></pre>
     </section>

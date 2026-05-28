@@ -6,3 +6,6 @@ presentation-small.mp4
 pmlr-license-agreement.pdf
 invariance_noise_grouped_envs.pdf
 kitchen_ant_maze_encoder_row.pdf
+*.mp4
+graphical_model.gif
+make_gif.py
