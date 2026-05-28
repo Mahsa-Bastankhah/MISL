@@ -314,6 +314,14 @@
       line-height: 0;
     }
 
+    .video-wrap iframe {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border: 0;
+      background: #000;
+    }
+
     .video-wrap video {
       display: block;
       width: 100%;
@@ -401,9 +409,12 @@
     <section>
       <h2>Presentation</h2>
       <div class="video-wrap" style="margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw); border-radius: 0;">
-        <video controls playsinline autoplay muted preload="auto" src="empowerment-reps-websit-presentation.mp4">
-          <a href="empowerment-reps-websit-presentation.mp4">Download presentation video</a>
-        </video>
+        <iframe
+          src="https://www.youtube.com/embed/OybzPsRrM50?rel=0"
+          title="Presentation"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        ></iframe>
       </div>
     </section>
 
